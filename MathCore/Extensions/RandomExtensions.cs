@@ -291,6 +291,11 @@ namespace System
                 Array[i] = rnd.NextDouble(D, M);
         }
 
+        /// <summary>Заполнить массив случайными значениями с нормальным распределением</summary>
+        /// <param name="rnd">Генератор случайных чисел</param>
+        /// <param name="Array">Заполняемый массив</param>
+        /// <param name="sigma">Среднеквадратичное отклонение</param>
+        /// <param name="mu">Математическое ожидание</param>
         public static void FillNormal(this Random rnd, [NotNull] double[] Array, double sigma = 1, double mu = 0)
         {
             for (var i = 0; i < Array.Length; i++)
@@ -314,13 +319,22 @@ namespace System
         /// <returns>Случайное число в интервале  [-D/2 + M, D/2 + M)</returns>
         public static double NextDouble([NotNull] this Random rnd, double D, double M) => (rnd.NextDouble() - 0.5) * D + M;
 
+        /// <summary>Получить случайное вещественное с равномерным распределением число в заданном интервале</summary>
+        /// <param name="rnd">Генератор случайных чисел</param>
+        /// <param name="Interval">Интервал случайного значения</param>
+        /// <returns></returns>
         public static double NextDoubleInterval([NotNull] this Random rnd, in Interval Interval) => rnd.NextDouble(Interval.Length, Interval.Middle);
 
+        /// <summary>Получить случайное вещественное с равномерным распределением число в заданном интервале</summary>
+        /// <param name="rnd">Генератор случайных чисел</param>
+        /// <param name="Min">Минимальное значение</param>
+        /// <param name="Max">Максимальное значение</param>
+        /// <returns></returns>
         public static double NextDoubleInterval([NotNull] this Random rnd, double Min, double Max) => rnd.NextDouble(Max - Min, 0.5 * (Max + Min));
 
         /// <summary>Shuffles a list in O(n) time by using the Fisher-Yates/Knuth algorithm</summary>
-        /// <param name="rnd"></param>
-        /// <param name = "list"></param>
+        /// <param name="rnd">Генератор случайных чисел</param>
+        /// <param name = "list">Перемешиваемый список</param>
         [Copyright("Superbest@bitbucket.org", url = "https://bitbucket.org/Superbest/superbest-random")]
         public static void Mix(this Random rnd, [NotNull] IList list)
         {
@@ -335,24 +349,24 @@ namespace System
         }
 
         /// <summary>
-        /// Returns n unique random numbers in the range [1, n], inclusive. 
-        /// This is equivalent to getting the first n numbers of some random permutation of the sequential numbers from 1 to max. 
-        /// Runs in O(k^2) time.
+        /// Возвращает уникальный набор случайных чисел в интервале [1, <paramref name="Max"/>] включительно.
+        /// Это эквивалентно получению первых n чисел случайных перестановок последовательности чисел от 1 до <paramref name="Max"/>. 
+        /// Сложность O(<paramref name="Count"/>^2)
         /// </summary>
-        /// <param name="rnd"></param>
-        /// <param name="n">Maximum number possible.</param>
-        /// <param name="k">How many numbers to return.</param>
+        /// <param name="rnd">Генератор случайных чисел</param>
+        /// <param name="Max">Максимально возможное значение</param>
+        /// <param name="Count">Количество требуемых чисел</param>
         /// <returns></returns>
         [Copyright("Superbest@bitbucket.org", url = "https://bitbucket.org/Superbest/superbest-random")]
         [NotNull]
-        public static int[] Permutation(this Random rnd, int n, int k)
+        public static int[] Permutation(this Random rnd, int Max, int Count)
         {
             var result = new List<int>();
             var sorted = new SortedSet<int>();
 
-            for (var i = 0; i < k; i++)
+            for (var i = 0; i < Count; i++)
             {
-                var r = rnd.Next(1, n + 1 - i);
+                var r = rnd.Next(1, Max + 1 - i);
 
                 // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
                 foreach (var q in sorted)

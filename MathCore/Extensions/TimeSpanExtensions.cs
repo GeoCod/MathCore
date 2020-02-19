@@ -4,42 +4,39 @@ using DST = System.Diagnostics.DebuggerStepThroughAttribute;
 // ReSharper disable once CheckNamespace
 namespace System
 {
+    /// <summary>Методы-расширения для <see cref="TimeSpan"/></summary>
     public static class TimeSpanExtensions
     {
+        /// <summary>
+        /// Преобразовать значение в строку.
+        /// Если часы равны 0, то поле часов отсутствует,
+        /// если часы и минуты равны нулю, то поля часов и минут отсутствуют
+        /// </summary>
+        /// <param name="time">Преобразуемое время</param>
+        /// <returns>Строковое представление времени в укороченном формате</returns>
         [DST, NotNull]
         public static string ToShortString(this TimeSpan time)
         {
             var result = string.Empty;
-            var empty = true;
             var days = time.Days;
-            if(days != 0)
-            {
-                result = $"{days}d";
-                empty = false;
-            }
+            if(days != 0) result = $"{days}";
 
             var hours = time.Hours;
-            if(!empty)
-                result += $"{hours:00}";
-            else if(hours != 0)
-            {
+            if(result.Length > 0)
+                result += $":{hours:00}";
+            else if(hours != 0) 
                 result = hours.ToString();
-                empty = false;
-            }
 
             var minutes = time.Minutes;
-            if(!empty)
+            if(result.Length > 0)
                 result += $":{minutes:00}";
-            else if(minutes != 0)
-            {
+            else if(minutes != 0) 
                 result = minutes.ToString();
-                empty = false;
-            }
 
             var seconds = time.Seconds;
             var milliseconds = time.Milliseconds;
 
-            return empty
+            return result.Length > 0
                     ? seconds == 0 && milliseconds == 0
                         ? "0"
                         : $"{seconds + (double)milliseconds / 1000}"

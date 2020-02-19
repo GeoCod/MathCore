@@ -4,14 +4,9 @@ using MathCore.Vectors;
 // ReSharper disable once CheckNamespace
 namespace System.Drawing
 {
-    public static class PointsEx
+    public static class PointsExtensions
     {
-        public static Point ValueToScreen(this Vector2D Value, Size FieldSize, Interval X, Interval Y)
-        {
-            var (w, h) = FieldSize;
-            var (value_x, value_y) = Value;
-            return ScreenPoint(X, Y, w, h, value_x, value_y);
-        }
+        public static Point ValueToScreen(this Vector2D Value, Size FieldSize, Interval X, Interval Y) => ScreenPoint(X, Y, FieldSize.Width, FieldSize.Height, Value.X, Value.Y);
 
         private static Point ScreenPoint(Interval X, Interval Y, int Width, int Height, double ValueX, double ValueY) =>
             new Point
@@ -20,19 +15,9 @@ namespace System.Drawing
                 Height - (int)Math.Round((ValueY - Y.Min) * Height / Y.Length)
             );
 
-        public static Point ValueToScreen(this PointF Value, Size FieldSize, Interval X, Interval Y)
-        {
-            var (w, h) = FieldSize;
-            var (value_x, value_y) = Value;
-            return ScreenPoint(X, Y, w, h, value_x, value_y);
-        }
+        public static Point ValueToScreen(this PointF Value, Size FieldSize, Interval X, Interval Y) => ScreenPoint(X, Y, FieldSize.Width, FieldSize.Height, Value.X, Value.Y);
 
-        public static PointF ScreenToValue(this Point Value, Size FieldSize, Interval X, Interval Y)
-        {
-            var (w, h) = FieldSize;
-            var (value_x, value_y) = Value;
-            return ScreenPoint(X, Y, w, h, value_x, value_y);
-        }
+        public static PointF ScreenToValue(this Point Value, Size FieldSize, Interval X, Interval Y) => ScreenPoint(X, Y, FieldSize.Width, FieldSize.Height, Value.X, Value.Y);
 
         public static void Deconstruct(this Point point, out int x, out int y)
         {

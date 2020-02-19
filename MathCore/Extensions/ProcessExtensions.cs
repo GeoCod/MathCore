@@ -1,9 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using MathCore.Annotations;
+// ReSharper disable UnusedType.Global
 
 namespace MathCore.Extensions
 {
@@ -32,6 +34,8 @@ namespace MathCore.Extensions
         }
 
         [StructLayout(LayoutKind.Sequential)]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
+        [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
         private struct PROCESS_BASIC_INFORMATION
         {
             public uint ExitStatus;
@@ -59,7 +63,7 @@ namespace MathCore.Extensions
         public static Process GetMotherProcess([NotNull] this Process process)
         {
             var info = new PROCESS_BASIC_INFORMATION();
-            if (NtQueryInformationProcess(process.Handle, 0, ref info, Marshal.SizeOf(info), out var written) != 0 
+            if (NtQueryInformationProcess(process.Handle, 0, ref info, Marshal.SizeOf(info), out var written) != 0
                 || written == 0)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
             return Process.GetProcessById(info.InheritedFromUniqueProcessId.ToInt32());
